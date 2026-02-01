@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Disha ❤️</title>
+    <style>
+        body { margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center; background: #fff0f3; font-family: 'Arial', sans-serif; overflow: hidden; }
+        #canvas { position: absolute; top: 0; left: 0; z-index: 1; }
+        .card { position: relative; z-index: 10; background: rgba(255, 255, 255, 0.9); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; max-width: 400px; }
+        h1 { color: #ff4d6d; font-size: 28px; margin-bottom: 30px; }
+        .btns { display: flex; justify-content: center; gap: 20px; align-items: center; }
+        button { padding: 12px 25px; font-size: 18px; border-radius: 10px; border: none; cursor: pointer; transition: 0.3s; }
+        #yesBtn { background: #ff4d6d; color: white; }
+        #noBtn { background: #adb5bd; color: white; position: relative; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <!-- Romantic Piano Background Music -->
+    <audio id="music" loop>
+        <source src="https://www.zedge.net/ringtones/7b8ca264-7c47-4f5b-aa6b-d8eb08c4b31a" type="audio/mpeg">
+    </audio>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="card" id="quiz">
+        <h1>Disha, Will you be my Valentine? 🌹</h1>
+        <div class="btns">
+            <button id="yesBtn" onclick="accepted()">Yes!</button>
+            <button id="noBtn" onmouseover="moveNo()">No</button>
+        </div>
+    </div>
+
+    <div class="card hidden" id="success">
+        <h1>Yay! I love you, Disha! ❤️</h1>
+        <p>Best Valentine's ever!</p>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let hearts = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Heart {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + 100;
+                this.size = Math.random() * 15 + 10;
+                this.speed = Math.random() * 2 + 1;
+                this.opacity = Math.random() * 0.5 + 0.3;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(255, 77, 109, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.bezierCurveTo(this.x - this.size, this.y - this.size, this.x - this.size * 1.5, this.y + this.size / 3, this.x, this.y + this.size);
+                ctx.bezierCurveTo(this.x + this.size * 1.5, this.y + this.size / 3, this.x + this.size, this.y - this.size, this.x, this.y);
+                ctx.fill();
+                this.y -= this.speed;
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (Math.random() < 0.1) hearts.push(new Heart());
+            hearts.forEach((h, i) => {
+                h.draw();
+                if (h.y < -100) hearts.splice(i, 1);
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        let yesScale = 1;
+        function moveNo() {
+            const no = document.getElementById('noBtn');
+            const yes = document.getElementById('yesBtn');
+            no.style.position = 'absolute';
+            no.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+            no.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+            
+            yesScale += 0.2;
+            yes.style.transform = `scale(${yesScale})`;
+            document.getElementById('music').play(); // Starts music on interaction
+        }
+
+        function accepted() {
+            document.getElementById('quiz').classList.add('hidden');
+            document.getElementById('success').classList.remove('hidden');
+            document.getElementById('music').play();
+        }
+    </script>
+</body>
+</html>
